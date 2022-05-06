@@ -1,5 +1,4 @@
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 
 # 네이버 지도 검색결과를 크롤링하는 함수입니다.
