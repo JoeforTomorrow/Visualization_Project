@@ -6,8 +6,8 @@ import pandas as pd
 import numpy as np
 from haversine import haversine
 
-dong_path = '/Users/jo/Documents/data/seouldongfixed.geojson'
-dong = json.load(open(dong_path))
+dong_path = "./visualization/data/seouldongfixed.geojson"
+dong = json.load(open(dong_path,encoding = "UTF-8"))
 
 class ZigBang:
     def __init__(self, path):
@@ -23,7 +23,6 @@ class ZigBang:
         def fee_max(x,zigbang):
             mask = zigbang["월세"] <= x
             zigbang = zigbang[mask].reset_index(drop=True)
-
             return zigbang
     
         def deposit_max(x,zigbang):
@@ -51,15 +50,15 @@ class ZigBang:
         
         return zigbang
     
-ZigBang('/Users/jo/Documents/data/zigbang.csv')
-zig=ZigBang.load_data('/Users/jo/Documents/data/zigbang.csv')
+ZigBang('./visualization/data/zigbang.csv')
+zig = ZigBang.load_data('./visualization/data/zigbang.csv')
 zig = ZigBang.lease_type(input("월세/전세 : "),zig)
 
 # 지하철
 
 def func_sub(zig):
 
-    sub_path = '/Users/jo/Documents/data/sub_station.csv'
+    sub_path = './visualization/data/sub_station.csv'
     subway = pd.read_csv(sub_path, encoding = 'cp949')
     subway.rename(columns={
         "위도":"경도",
@@ -91,7 +90,7 @@ def func_sub(zig):
 
 def func_store(zig):
 
-    store_path = '/Users/jo/Documents/data/store.csv'
+    store_path = './visualization/data/store.csv'
     store = pd.read_csv(store_path)
 
     store_com=pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
@@ -113,7 +112,7 @@ def func_store(zig):
 
 def func_daiso(zig):
 
-    daiso_path = '/Users/jo/Documents/data/seoul_daiso.csv'
+    daiso_path = './visualization/data/seoul_daiso.csv'
     daiso = pd.read_csv(daiso_path)
 
     daiso_com=pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
@@ -135,7 +134,7 @@ def func_daiso(zig):
 
 def func_park(zig):
 
-    park_path = '/Users/jo/Documents/data/seoul_ecotourism_xy.csv'
+    park_path = './visualization/data/seoul_ecotourism_xy.csv'
     park = pd.read_csv(park_path)
 
     park_com=pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
@@ -157,7 +156,7 @@ def func_park(zig):
 
 def func_studycafe(zig):
 
-    sc_path = '/Users/jo/Documents/data/studycafe.csv'
+    sc_path = './visualization/data/studycafe.csv'
     study = pd.read_csv(sc_path)
     study=study.drop("Unnamed: 0",axis=1)
     study=study.drop("id",axis=1)
@@ -181,7 +180,7 @@ def func_studycafe(zig):
 
 def func_starbucks(zig):
 
-    star_path = '/Users/jo/Documents/data/starbucks.csv'
+    star_path = './visualization/data/starbucks.csv'
     starbucks = pd.read_csv(star_path)
     starbucks = starbucks.drop("Unnamed: 0",axis=1)
     
@@ -204,7 +203,7 @@ def func_starbucks(zig):
 
 def func_fastfoods(zig):
 
-    fast_path = '/Users/jo/Documents/data/fastfood.csv'
+    fast_path = './visualization/data/fastfood.csv'
     fastfoods = pd.read_csv(fast_path)
     
     fastfoods_com = pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
