@@ -51,7 +51,6 @@ class ZigBang:
         
         return zigbang
     
-ZigBang('/Users/jo/Documents/data/zigbang.csv')
 zig=ZigBang.load_data('/Users/jo/Documents/data/zigbang.csv')
 zig = ZigBang.lease_type(input("월세/전세 : "),zig)
 
@@ -141,7 +140,7 @@ def func_park(zig):
     park_com=pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
 
     for i in range(len(zig)):
-        mask = ((park['x'] - zig.loc[i,"경도"])**2 + (park['y'] - zig.loc[i,"위도"])**2)**0.5 <= 0.005
+        mask = ((park['x'] - zig.loc[i,"경도"])**2 + (park['y'] - zig.loc[i,"위도"])**2)**0.5 <= 0.0075
         sty_mask=park[mask].reset_index()
 
         if len(sty_mask) >= 1:
@@ -222,6 +221,28 @@ def func_fastfoods(zig):
         
     return fastfoods_com
 
+# 병원
+
+def func_hospital(zig):
+
+    hosp_path = '/Users/jo/Documents/data/seoul_hospital_loc.csv'
+    hospital = pd.read_csv(hosp_path)
+    
+    hospital_com = pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
+
+    for i in range(len(zig)):
+        mask = ((hospital['경도'] - zig.loc[i,"경도"])**2 + (hospital['위도'] - zig.loc[i,"위도"])**2)**0.5 <= 0.0025
+        sty_mask=hospital[mask].reset_index()
+
+        if len(sty_mask) >= 1:
+            hospital_com.loc[i,["개수"]]=1
+            hospital_com.loc[i,["유무"]]='있음'
+        else:
+            hospital_com.loc[i,["개수"]]=0
+            hospital_com.loc[i,["유무"]]='없음'
+        
+    return hospital_com
+
 subway_lst = func_sub(zig)
 daiso_cnt = func_daiso(zig)
 store_cnt = func_store(zig)
@@ -229,4 +250,4 @@ park_cnt = func_park(zig)
 study_cnt = func_studycafe(zig)
 starbucks_cnt = func_starbucks(zig)
 fastfoods_cnt = func_fastfoods(zig)
-
+hospital_cnt = func_hospital(zig)
