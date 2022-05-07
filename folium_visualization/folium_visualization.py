@@ -210,6 +210,28 @@ def func_fastfoods(zig):
         
     return fastfoods_com
 
+# 병원
+
+def func_hospital(zig):
+
+    hosp_path = '/content/drive/MyDrive/project/hospital/seoul_hospital_loc.csv'
+    hospital = pd.read_csv(hosp_path)
+    
+    hospital_com = pd.DataFrame(index=range(len(zig)), columns=['개수','유무'])
+
+    for i in range(len(zig)):
+        mask = ((hospital['경도'] - zig.loc[i,"경도"])**2 + (hospital['위도'] - zig.loc[i,"위도"])**2)**0.5 <= 0.0025
+        sty_mask=hospital[mask].reset_index()
+
+        if len(sty_mask) >= 1:
+            hospital_com.loc[i,["개수"]]=1
+            hospital_com.loc[i,["유무"]]='있음'
+        else:
+            hospital_com.loc[i,["개수"]]=0
+            hospital_com.loc[i,["유무"]]='없음'
+        
+    return hospital_com
+
 subway_lst = func_sub(zig)
 daiso_cnt = func_daiso(zig)
 store_cnt = func_store(zig)
@@ -217,6 +239,7 @@ park_cnt = func_park(zig)
 study_cnt = func_studycafe(zig)
 starbucks_cnt = func_starbucks(zig)
 fastfoods_cnt = func_fastfoods(zig)
+hospital_cnt = func_hospital(zig)
 
 # 지도 데이터 시각화
 import folium
@@ -243,26 +266,29 @@ folium.LayerControl().add_to(s_map)
 
 cnt=0
 for i in range(len(zig)):
-    if subway_lst['유무'][i]+store_cnt['개수'][i]+daiso_cnt['개수'][i] + park_cnt['개수'][i]+study_cnt['개수'][i]+fastfoods_cnt['개수'][i]+starbucks_cnt['개수'][i] !=7:
-        if store_cnt['개수'][i]+daiso_cnt['개수'][i] + park_cnt['개수'][i]+study_cnt['개수'][i]+fastfoods_cnt['개수'][i]+starbucks_cnt['개수'][i] >=5:
+    if (subway_lst['유무'][i]+park_cnt['개수'][i]+starbucks_cnt['개수'][i]+hospital_cnt['개수'][i] != 4) and (store_cnt['개수'][i]+daiso_cnt['개수'][i]+study_cnt['개수'][i])  <=3:
+        if subway_lst['유무'][i]+store_cnt['개수'][i]+daiso_cnt['개수'][i] + park_cnt['개수'][i]+study_cnt['개수'][i]+fastfoods_cnt['개수'][i]+starbucks_cnt['개수'][i]+hospital_cnt['개수'][i] >=5:
                     cnt+=1
                     folium.Marker((zig["위도"][i], zig["경도"][i]),
                     popup = folium.Popup(f"""
 <div align='center'>
-  <img alt='' draggable='false' style='zoom: 22%' src='https://ic.zigbang.com/ic/items/31449074/1.jpg?w=800&amp;h=600&amp;q=70&amp;a=1'>
   <br/>
-  월세 : {zig['월세(만원)'][i]} 보증금 : {zig['보증금(만원)'][i]}
-  <br/>
-  이 집 근처에는 무엇이 있을까요?
-  <br/>
-<div/>
-<div align='left'>
-역세권 정보 : {subway_lst['개수'][i]} / if(subway_lst['개수'][i] != 0){subway_lst['역목록'][i]} <br/> 
-편의점 : {store_cnt['유무'][i]} <br/> 다이소 : {daiso_cnt['유무'][i]} <br/> 
-공원 : {park_cnt['유무'][i]} <br/> 스터디 카페 : {study_cnt['유무'][i]} <br/> 
-스타벅스 : {starbucks_cnt['유무'][i]} <br/> 
-패스트푸드 : {fastfoods_cnt['유무'][i]} <br/>
-<div/>
+  <img alt='' draggable='false' src='{zig['이미지'][i]}?w=150&amp;h=120&amp;q=70&amp;a=1'><br/>
+  <a href='{zig['주소'][i]}'>해당 페이지로 이동</a><br/>
+  <span>월세 : {zig['월세'][i]} 보증금 : {zig['보증금'][i]}</span><br/>
+  <div align='center'><strong>이 집 근처에는...</strong>
+    <div align='left'>
+      <span style="font-weight:bold">주변 역 정보</span> : {subway_lst['개수'][i]}개 / {subway_lst['역목록'][i]}<br/>
+      <span style="font-weight:bold">편의점</span> : {store_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">다이소</span> : {daiso_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">공원</span> : {park_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">스터디 카페</span> : {study_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">스타벅스</span> : {starbucks_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">패스트푸드</span> : {fastfoods_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">병원</span> : {hospital_cnt['유무'][i]}
+    </div>
+  </div>
+</div>
 """,
             max_width='1500'),
                     tooltip = f"{zig['구'][i]} {zig['동'][i]}",
@@ -272,19 +298,24 @@ for i in range(len(zig)):
         cnt+=1
         folium.Marker((zig["위도"][i], zig["경도"][i]),
         popup = folium.Popup(f"""
-    <div align='center'>
-    <img alt='' draggable='false' style='zoom: 22%' src='https://ic.zigbang.com/ic/items/31449074/1.jpg?w=800&amp;h=600&amp;q=70&amp;a=1'>
-    <br/>
-    이 집 근처에는 무엇이 있을까요?
-    <br/>
+<div align='center'>
+  <br/>
+  <img alt='' draggable='false' src='{zig['이미지'][i]}?w=150&amp;h=120&amp;q=70&amp;a=1'><br/>
+  <a href='{zig['주소'][i]}'>해당 페이지로 이동</a><br/>
+  <span>월세 : {zig['월세'][i]} 보증금 : {zig['보증금'][i]}</span><br/>
+  <div align='center'><strong>이 집 근처에는...</strong>
     <div align='left'>
-    월세 : {zig['월세(만원)'][i]} 보증금 : {zig['보증금(만원)'][i]} <br/> 
-    역세권 정보 : {subway_lst['개수'][i]} / {subway_lst['역목록'][i]} <br/> 
-    편의점 : {store_cnt['유무'][i]} <br/> 다이소 : {daiso_cnt['유무'][i]} <br/> 
-    공원 : {park_cnt['유무'][i]} <br/> 스터디 카페 : {study_cnt['유무'][i]} <br/> 
-    스타벅스 : {starbucks_cnt['유무'][i]} <br/> 
-    패스트푸드 : {fastfoods_cnt['유무'][i]} <br/>
-    <div/>
+      <span style="font-weight:bold">주변 역 정보</span> : {subway_lst['개수'][i]}개 / {subway_lst['역목록'][i]}<br/>
+      <span style="font-weight:bold">편의점</span> : {store_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">다이소</span> : {daiso_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">공원</span> : {park_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">스터디 카페</span> : {study_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">스타벅스</span> : {starbucks_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">패스트푸드</span> : {fastfoods_cnt['유무'][i]}<br/>
+      <span style="font-weight:bold">병원</span> : {hospital_cnt['유무'][i]}
+    </div>
+  </div>
+</div>
     """,
     max_width='1500'),                  
         tooltip = f"{zig['구'][i]} {zig['동'][i]}",
