@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>코멘트</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'css/noscript.css' %}" /></noscript>
+	</head>
+	<body class="is-preload" style="background-color: #6fc3df">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header" class="alt">
+						<a href="/" class="logo"><strong>1조</strong> <span>자취방 구해조</span></a>
+					</header>
+					<section id="bannerc" class="comment">
+						<div class="inner">
+							<header class="comment">
+								<h1>자유롭게 코멘트를 남겨주세요</h1>
+							</header>
+						</div>
+					</section>	
+				<!-- Comments -->
+					<div class="content" style="margin-top:68px ; margin-left: 68px;">
+						<div class="messageDiv">
+							<form action="./createComment/" method="POST">{% csrf_token %}
+								<div class="input-group" style="display: flex;">
+									<div style = "width: 80%;" style="color: antiquewhite;">
+										<input id="Comment" style="background: rgb(14, 152, 177);" name="Comment" type="text" class="form-control" placeholder="발표에 대한 코멘트 남기기">
+									</div>
+									<div style="flex-grow: 1;">
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="submit">코멘트 남기기</button>
+										</span>
+									</div>
+								</div>
+							</form>
+						</div>
+			
+						<div class="toDoDiv" style="margin-top: 5%; margin-bottom: 5%">
+							<ul>
+								{% for comment in comments%}
+								<form action="./deleteComment/" method="GET" >
+									<div class="form-control" name='todo1' style="align-items: center; display: flex;">
+										<div style = "width: 80%;">
+											<li style="font-size: 20px;"><strong>{{comment.content}}</strong></li>
+											<input type="hidden" id="todoNum" name="todoNum" value={{comment.id}}></input>
+										</div>
+										<div style="flex-grow: 1;">
+											<span class="input-group-addon">
+											<button type="submit" style="font-size: 11px;">삭제하기</button>
+											</span>
+										</div>
+									</div>
+								</form>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner" style="margin-top:68px ; margin-left: 68px;">
+							<ul class="icons">
+								<li><a href="https://github.com/JoeforTomorrow/Visualization_Project" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+							<ul class="copyright">
+								<li style="color: antiquewhite;">&copy; Untitled</li><li style="color: antiquewhite;">Design: <a href="https://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{% static 'javascript/jquery.min.js' %}"></script>
+			<script src="{% static 'javascript/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'javascript/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'javascript/browser.min.js' %}"></script>
+			<script src="{% static 'javascript/breakpoints.min.js' %}"></script>
+			<script src="{% static 'javascript/util.js' %}"></script>
+			<script src="{% static 'javascript/main.js' %}"></script>
+
+	</body>
+</html>
