@@ -20,5 +20,6 @@ urlpatterns = [
     path('',include('main.urls')),
     path('admin/', admin.site.urls),
     path('visualization/',include('visualization.urls')),
-    path('comment/', include('comment.urls'))
+    path('comment/', include('comment.urls')),
+    path('board/',include('board.urls'))
 ]

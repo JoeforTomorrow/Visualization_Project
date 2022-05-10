@@ -51,9 +51,11 @@ class ZigBang:
         
         return zigbang
     
-zig=ZigBang.load_data('./visualization/data/zigbang.csv')
+zig = ZigBang.load_data('./visualization/data/zigbang.csv')
 zig = ZigBang.lease_type(input("월세/전세 : "),zig)
-
+mask= zig["층수"] != "반지하"
+zig = zig[mask]
+zig.reset_index(drop=True,inplace=True)
 # 지하철
 
 def func_sub(zig):

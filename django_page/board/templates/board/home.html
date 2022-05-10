@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="kr">
+    <head>
+		<title>Q&A게시판</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'css/noscript.css' %}" /></noscript>
+	</head>
+
+    <body class="is-preload" style="background-color: #8d82c4;">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+				
+				<!-- Header -->
+				<!-- Note: The "styleN" class below should match that of the banner element. -->
+					<header id="header" class="alt style2">
+						<a href="/" class="logo"><strong>1조</strong> <span>자취방 구해조</span></a>
+					</header>
+
+                    <section id="banner" class="style2">
+						<div class="inner">
+							<span class="image">
+								<img src="{% static 'images/pic02.jpg' %}" alt="" />
+							</span>
+							<header class="major">
+								<h1>자유롭게 질문해주세요</h1>
+							</header>
+                            <div class="content">
+								<ul class="actions">
+									<li><a href="./new" class="button next scrolly">질문하기</a></li>
+								</ul>
+							</div>
+
+						</div>	
+					</section>
+                    <section id="two" class="spotlights">
+                        {% for board in boards %}
+                            <section style="height:7%;flex-direction:row;">
+                                <div class="image" style="width:20%; margin-left: 5%; margin-top: 2%">
+                                    <img src="{% static 'images/qa.png' %}" style="height: 70%; width: 70%" alt="" data-position="center center" />
+                                </div>
+                                <div class="content" style="width: 80%;">
+                                    <div class="inner">
+                                        <header class="major">
+                                            <h4>{{ board.title }}</h4>
+                                        </header>
+                                        <p>{{ board.summary }}</p>
+                                        <ul class="actions">
+                                            <li><a href="{% url 'detail' board.id %}" class="button">자세히보러가기</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
+                        {% endfor %}
+                    </section>
+                    <!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<ul class="icons">
+								<li><a href="https://github.com/JoeforTomorrow/Visualization_Project" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+							<ul class="copyright">
+								<li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</footer>
+		<!-- Scripts -->
+		<script src="{% static 'javascript/jquery.min.js' %}"></script>
+		<script src="{% static 'javascript/jquery.scrolly.min.js' %}"></script>
+		<script src="{% static 'javascript/jquery.scrollex.min.js' %}"></script>
+		<script src="{% static 'javascript/browser.min.js' %}"></script>
+		<script src="{% static 'javascript/breakpoints.min.js' %}"></script>
+		<script src="{% static 'javascript/util.js' %}"></script>
+		<script src="{% static 'javascript/main.js' %}"></script>
+    </body>
+</html>

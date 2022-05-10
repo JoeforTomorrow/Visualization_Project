@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="kr">
+    <head>
+		<title>질문 작성하기</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'css/noscript.css' %}" /></noscript>
+	</head>
+
+    <body class="is-preload">
+        <div id="wrapper">
+				
+            <!-- Header -->
+            <!-- Note: The "styleN" class below should match that of the banner element. -->
+                <header id="header" class="logo">
+                    <a href="/" class="logo"><strong>1조</strong> <span>자취방 구해조</span></a>
+                </header>
+                <section id="contact">
+                    <div class="inner">
+                        <section style="width: 100%;">
+                            <form method="post" action="{% url 'update' board.id %}">
+                                {%csrf_token%}
+                                <div class="fields">
+                                    <div class="field half">
+                                        <label for="name">제목</label>
+                                        <input type="text" name="title" value="{{board.title}}" id="name" />
+                                    </div>
+                                    <div class="field half">
+                                        <label for="email">작성자</label>
+                                        <input type="text" name="writer" value="{{board.writer}}" id="email"/>
+                                    </div>
+                                    <div class="field">
+                                        <label for="message">본문</label>
+                                        <textarea name="body" id="message" rows="6">{{board.body}}</textarea>
+                                    </div>
+                                </div>
+                                <ul class="actions">
+                                    <li><input type="submit" value="작성하기" class="primary" /></li>
+                                    <li><input type="reset" value="내용지우기" /></li>
+                                </ul>
+                            </form>
+                        </section>
+                    </div>
+                </section>
+
+<!-- <body>
+    <h1>Write New Post</h1>
+    <form action="{% url 'create' %}" method="post">
+        {%csrf_token%}
+        <p>제목:   <input type="text" name="title"></p>
+        <p>작성자: <input type="text" name="writer"></p>
+        <p>본문:   <textarea type="text" name="body"></textarea></p>
+        <button type="submit">제출하기</button>
+    </form>
+</body>
+</html> -->
+
+             
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <ul class="icons">
+                    <li><a href="https://github.com/JoeforTomorrow/Visualization_Project" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                </ul>
+                <ul class="copyright">
+                    <li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+        <!-- Scripts -->
+        <script src="{% static 'javascript/jquery.min.js' %}"></script>
+        <script src="{% static 'javascript/jquery.scrolly.min.js' %}"></script>
+        <script src="{% static 'javascript/jquery.scrollex.min.js' %}"></script>
+        <script src="{% static 'javascript/browser.min.js' %}"></script>
+        <script src="{% static 'javascript/breakpoints.min.js' %}"></script>
+        <script src="{% static 'javascript/util.js' %}"></script>
+        <script src="{% static 'javascript/main.js' %}"></script>
+    </body>
+</html>
