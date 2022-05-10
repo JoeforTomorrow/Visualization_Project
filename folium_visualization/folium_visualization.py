@@ -1,47 +1,65 @@
-
-
-# 전/월세 데이터 불러오기
+import folium
+import json
 import pandas as pd
-
-zig_path = '/content/drive/MyDrive/project/zigbang/new_zig.csv'
-zig = pd.read_csv(zig_path)
-zig=zig.drop("Unnamed: 0",axis=1)
-
-def lease_type(x,zig):
-    if x == "월세":
-        mask = zig['전세/월세'] == "월세"
-        zig=zig[mask].reset_index(drop=True)
-        
-        y = input("월세 상한 : ")
-        zig = fee_max(int(y), zig)
-
-        z = input("보증금 상한 : ")
-        zig = deposit_max(int(z), zig)
-
-    elif x == "전세":
-        mask = zig['전/월세'] == "전세"
-        zig=zig[mask].reset_index(drop=True)
-
-        z = input("보증금 상한 : ")
-        zig = deposit_max(int(z), zig)
-    
-    return zig
-
-def fee_max(x,zig):
-    mask = zig["월세(만원)"] <= x
-    zig=zig[mask].reset_index(drop=True)
-    return zig
-
-def deposit_max(x,zig):
-    mask = (zig["보증금(만원)"] <= x) & (zig["보증금(만원)"] >= 100)
-    zig=zig[mask].reset_index(drop=True)
-    return zig
-
-zig = lease_type(input("월세/전세 : "),zig)
-
-# 좌표값을 통한 거리 측정을 위해 haversine 패키지 설치
-## 우선 터미널 상에서 pip install haversine 실행 필요
+import numpy as np
 from haversine import haversine
+
+# 폴리움 데이터 불러오기
+
+dong_path = './visualization/data/seouldongfixed.geojson'
+dong = json.load(open(dong_path,encoding = 'UTF-8'))
+
+# 직방 데이터 불러오기
+
+class ZigBang:
+    def __init__(self, path):
+        self.path = path
+    def load_data(self):
+        zigbang = pd.read_csv(self)
+        zigbang = zigbang.drop("Unnamed: 0",axis=1)
+
+        return zigbang
+
+    def lease_type(x,zigbang):
+    
+        def fee_max(x,zigbang):
+            mask = zigbang["월세"] <= x
+            zigbang = zigbang[mask].reset_index(drop=True)
+
+            return zigbang
+    
+        def deposit_max(x,zigbang):
+            mask = (zigbang["보증금"] <= x) & (zigbang["보증금"] >= 100)
+            zigbang=zigbang[mask].reset_index(drop=True)
+
+            return zigbang
+    
+        if x == "월세":
+            mask = zigbang['전세/월세'] == "월세"
+            zigbang=zigbang[mask].reset_index(drop=True)
+            
+            y = input("월세 상한 : ")
+            zigbang = fee_max(int(y), zigbang)
+    
+            z = input("보증금 상한 : ")
+            zigbang = deposit_max(int(z), zigbang)
+    
+        elif x == "전세":
+            mask = zigbang['전세/월세'] == "전세"
+            zigbang=zigbang[mask].reset_index(drop=True)
+    
+            z = input("보증금 상한 : ")
+            zigbang = deposit_max(int(z), zigbang)
+        
+        return zigbang
+    
+zig=ZigBang.load_data('./visualization/data/zigbang.csv')
+zig = ZigBang.lease_type(input("월세/전세 : "),zig)
+mask=zig["층수"] != "반지하"
+zig=zig[mask]
+zig.reset_index(drop=True,inplace=True)
+
+# 주변 각종 시설 정보 불러오기
 
 # 지하철
 
@@ -257,7 +275,7 @@ folium.Choropleth(geo_data=dong,
                   fill_color='Reds',
                   fill_opacity=0.5,
                   line_opacity=0.2,
-                  columns=['동','월세(만원)'],
+                  columns=['동','월세'],
                   key_on = 'feature.properties.EMD_KOR_NM',
                   legend_name="월세"
             ).add_to(s_map)
